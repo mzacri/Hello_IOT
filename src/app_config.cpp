@@ -22,41 +22,15 @@ SOFTWARE.
 
 */
 
-#include <Arduino.h>
-#include <wifi_client.h>
-#include <mqtt_client.h>
-
-#include "app_io.h"
 #include "app_config.h"
+#include "app_io.h"
+#include <serialize.h>
 
-void
-setup()
+void esp1_buzzer_callback(byte* message, uint length)
 {
-  Serial.begin(115200);
-  wifi_client::setup();
-  mqtt_client::setup();
-  app_io::setup();
-}
-
-void
-loop()
-{
-  if(not mqtt_client::isConnected())
-  {
-    mqtt_client::connect();
-  }
-
-  if(not mqtt_client::loop())
-  {
-    mqtt_client::connect();
-  }
-
-  if(app_io::pirDetect())
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "detected");
-  }
-  else
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "not_detected");
-  }
+    auto message_str = bytesToString(message, length);
+    if(message_str == "buzz")
+    {
+        app_io::toggleBuzzer();
+    }
 }

@@ -1,0 +1,10 @@
+{
+
+"build": {
+    "flags": [
+        "-I /home/mbarek/Bureau/VSCode/PlatformIO/Hello_IOT/include"
+    ]
+
+}
+
+}

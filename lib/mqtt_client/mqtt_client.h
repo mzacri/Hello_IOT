@@ -22,41 +22,45 @@ SOFTWARE.
 
 */
 
+#pragma once
 #include <Arduino.h>
-#include <wifi_client.h>
-#include <mqtt_client.h>
 
-#include "app_io.h"
-#include "app_config.h"
-
+namespace mqtt_client {
+/*
+ * @brief: Setup MQTT broker IP and the client's callback
+ */
 void
-setup()
-{
-  Serial.begin(115200);
-  wifi_client::setup();
-  mqtt_client::setup();
-  app_io::setup();
-}
+setup();
 
+/*
+ * @brief: Called function when data is received in the subscribed MQTT topic
+ */
 void
-loop()
-{
-  if(not mqtt_client::isConnected())
-  {
-    mqtt_client::connect();
-  }
+callback(String topic, byte* message, uint length);
 
-  if(not mqtt_client::loop())
-  {
-    mqtt_client::connect();
-  }
+/*
+ * @brief: Connect MQTT client to broker routine
+ */
+void
+connect();
 
-  if(app_io::pirDetect())
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "detected");
-  }
-  else
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "not_detected");
-  }
-}
+
+/*
+ * @brief: Check MQTT client  connection to broker
+ */
+bool
+isConnected();
+
+/*
+ * @brief: Check if an MQTT message is published and call the associated callback.
+ */
+bool
+loop();
+
+/*
+ * @brief: Publish message to topic.
+ */
+void
+publish(const char* topic, const char* message);
+
+}  // namespace mqtt_client

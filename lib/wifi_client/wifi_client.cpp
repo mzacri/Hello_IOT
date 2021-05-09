@@ -23,40 +23,35 @@ SOFTWARE.
 */
 
 #include <Arduino.h>
+#include <ESP8266WiFi.h>
 #include <wifi_client.h>
-#include <mqtt_client.h>
-
-#include "app_io.h"
 #include "app_config.h"
+
+namespace wifi_client {
+
+const char* k_ssid = _WIFI_SSID;
+const char* k_password = _WIFI_PASSWORD;
 
 void
 setup()
 {
-  Serial.begin(115200);
-  wifi_client::setup();
-  mqtt_client::setup();
-  app_io::setup();
+  delay(10);
+#ifdef _CONSOLE_DEBUG
+  Serial.print("Connecting to ");
+  Serial.println(k_ssid);
+#endif
+  WiFi.begin(k_ssid, k_password);
+  while(WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+#ifdef _CONSOLE_DEBUG
+    Serial.print(".");
+#endif
+  }
+#ifdef _CONSOLE_DEBUG 
+  Serial.println("");
+  Serial.print("WiFi connected - ESP IP address: ");
+  Serial.println(WiFi.localIP());
+#endif
 }
-
-void
-loop()
-{
-  if(not mqtt_client::isConnected())
-  {
-    mqtt_client::connect();
-  }
-
-  if(not mqtt_client::loop())
-  {
-    mqtt_client::connect();
-  }
-
-  if(app_io::pirDetect())
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "detected");
-  }
-  else
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "not_detected");
-  }
-}
+}  // namespace wifi_client

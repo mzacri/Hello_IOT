@@ -22,41 +22,25 @@ SOFTWARE.
 
 */
 
-#include <Arduino.h>
-#include <wifi_client.h>
-#include <mqtt_client.h>
+#pragma once
 
-#include "app_io.h"
-#include "app_config.h"
-
+namespace app_io {
+/*
+ * @brief: Setup application IO according to the app_config.h
+ */
 void
-setup()
-{
-  Serial.begin(115200);
-  wifi_client::setup();
-  mqtt_client::setup();
-  app_io::setup();
-}
+setup();
 
+/*
+ * @brief: Return PIR detection boolean
+ */
+bool
+pirDetect();
+
+/*
+ * @brief: Return PIR detection boolean
+ */
 void
-loop()
-{
-  if(not mqtt_client::isConnected())
-  {
-    mqtt_client::connect();
-  }
+toggleBuzzer();
 
-  if(not mqtt_client::loop())
-  {
-    mqtt_client::connect();
-  }
-
-  if(app_io::pirDetect())
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "detected");
-  }
-  else
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "not_detected");
-  }
-}
+}  // namespace app_io

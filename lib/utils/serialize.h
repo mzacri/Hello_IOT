@@ -22,41 +22,28 @@ SOFTWARE.
 
 */
 
-#include <Arduino.h>
-#include <wifi_client.h>
-#include <mqtt_client.h>
+#pragma once
 
-#include "app_io.h"
+#include <Arduino.h>
 #include "app_config.h"
 
-void
-setup()
+inline
+String
+bytesToString(byte* message, uint length)
 {
-  Serial.begin(115200);
-  wifi_client::setup();
-  mqtt_client::setup();
-  app_io::setup();
-}
-
-void
-loop()
-{
-  if(not mqtt_client::isConnected())
+  String messageTemp;
+#ifdef _CONSOLE_DEBUG
+  Serial.print("Message's bytes: ");
+#endif
+  for(auto i = 0u; i < length; i++)
   {
-    mqtt_client::connect();
+#ifdef _CONSOLE_DEBUG
+    Serial.print((char)message[i]);
+#endif
+    messageTemp += (char)message[i];
   }
-
-  if(not mqtt_client::loop())
-  {
-    mqtt_client::connect();
-  }
-
-  if(app_io::pirDetect())
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "detected");
-  }
-  else
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "not_detected");
-  }
+#ifdef _CONSOLE_DEBUG
+  Serial.println();
+#endif
+  return messageTemp;
 }

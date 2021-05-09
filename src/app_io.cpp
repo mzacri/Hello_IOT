@@ -22,41 +22,32 @@ SOFTWARE.
 
 */
 
-#include <Arduino.h>
-#include <wifi_client.h>
-#include <mqtt_client.h>
-
 #include "app_io.h"
 #include "app_config.h"
+#include <Arduino.h>
 
+namespace app_io {
 void
 setup()
 {
-  Serial.begin(115200);
-  wifi_client::setup();
-  mqtt_client::setup();
-  app_io::setup();
+  pinMode(_BUZZER_PIN, OUTPUT);
+  pinMode(_PIR_PIN, INPUT);
+#ifdef _CONSOLE_DEBUG
+  Serial.println("Calibrating PIR sensor, stay still for 15 min...");
+#endif
+  delay(15000);
+}
+
+bool
+pirDetect()
+{
+  return digitalRead(_PIR_PIN);
 }
 
 void
-loop()
+toggleBuzzer()
 {
-  if(not mqtt_client::isConnected())
-  {
-    mqtt_client::connect();
-  }
-
-  if(not mqtt_client::loop())
-  {
-    mqtt_client::connect();
-  }
-
-  if(app_io::pirDetect())
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "detected");
-  }
-  else
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "not_detected");
-  }
+  tone(_BUZZER_PIN, _BUZZER_FREQUENCY_HZ, _BUZZER_DURATION_MS);
 }
+
+}  // namespace app_io

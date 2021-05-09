@@ -22,41 +22,14 @@ SOFTWARE.
 
 */
 
-#include <Arduino.h>
-#include <wifi_client.h>
-#include <mqtt_client.h>
+#pragma once
 
-#include "app_io.h"
-#include "app_config.h"
+namespace wifi_client {
 
+/*
+ * @brief: Setup wifi using defined ssid and password in the app_config.h header.
+ */
 void
-setup()
-{
-  Serial.begin(115200);
-  wifi_client::setup();
-  mqtt_client::setup();
-  app_io::setup();
-}
+setup();
 
-void
-loop()
-{
-  if(not mqtt_client::isConnected())
-  {
-    mqtt_client::connect();
-  }
-
-  if(not mqtt_client::loop())
-  {
-    mqtt_client::connect();
-  }
-
-  if(app_io::pirDetect())
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "detected");
-  }
-  else
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "not_detected");
-  }
 }

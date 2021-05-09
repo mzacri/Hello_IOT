@@ -22,41 +22,46 @@ SOFTWARE.
 
 */
 
+#pragma once
+
 #include <Arduino.h>
-#include <wifi_client.h>
-#include <mqtt_client.h>
+/**
+ * @brief: Debug config
+ */
+#define _CONSOLE_DEBUG
 
-#include "app_io.h"
-#include "app_config.h"
+/**
+ * @brief: Wifi client parameters
+ */
+#define _WIFI_SSID "IOT_VLAN"
+#define _WIFI_PASSWORD "CRYCRYCRY"
+
+/**
+ * @brief: MQTT client parameters
+ */
+#define _MQTT_CLIENT_NAME "ESPClient"
+#define _MQTT_BROKER_IP "192.168.255.20"
+#define _MQTT_BROKER_PORT 1883
+
+#define _MQTT_SUBSCRIBED_TOPICS_NAMES \
+  {                                   \
+    "esp1_buzzer"                      \
+  }
+#define _MQTT_SUBSCRIBED_TOPICS_CALLBACKS \
+  {                                       \
+    esp1_buzzer_callback                   \
+  }
 
 void
-setup()
-{
-  Serial.begin(115200);
-  wifi_client::setup();
-  mqtt_client::setup();
-  app_io::setup();
-}
+esp1_buzzer_callback(byte* message, uint length);
 
-void
-loop()
-{
-  if(not mqtt_client::isConnected())
-  {
-    mqtt_client::connect();
-  }
+#define _MQTT_PUBLISH_TOPIC "esp1_pir_detection"
 
-  if(not mqtt_client::loop())
-  {
-    mqtt_client::connect();
-  }
+/**
+ * @brief: Application IO parameters
+ */
+#define _PIR_PIN 6
 
-  if(app_io::pirDetect())
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "detected");
-  }
-  else
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "not_detected");
-  }
-}
+#define _BUZZER_PIN 5
+#define _BUZZER_FREQUENCY_HZ 1000 
+#define _BUZZER_DURATION_MS 1000
