@@ -40,7 +40,10 @@ setup()
   Serial.print("Connecting to ");
   Serial.println(k_ssid);
 #endif
-  WiFi.begin(k_ssid, k_password);
+  if(WiFi.status() != WL_CONNECTED)
+  {
+    WiFi.begin(k_ssid, k_password);
+  }
   while(WiFi.status() != WL_CONNECTED)
   {
     delay(500);
@@ -52,6 +55,7 @@ setup()
   Serial.println("");
   Serial.print("WiFi connected - ESP IP address: ");
   Serial.println(WiFi.localIP());
+  return;
 #endif
 }
 }  // namespace wifi_client

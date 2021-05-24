@@ -33,19 +33,19 @@ SOFTWARE.
 /**
  * @brief: Wifi client parameters
  */
-#define _WIFI_SSID "IOT_VLAN"
-#define _WIFI_PASSWORD "CRYCRYCRY"
+#define _WIFI_SSID "EL RAPIDO"
+#define _WIFI_PASSWORD "E333DD6CAE"
 
 /**
  * @brief: MQTT client parameters
  */
 #define _MQTT_CLIENT_NAME "ESPClient"
-#define _MQTT_BROKER_IP "192.168.255.20"
+#define _MQTT_BROKER_IP "192.168.0.118"
 #define _MQTT_BROKER_PORT 1883
 
 #define _MQTT_SUBSCRIBED_TOPICS_NAMES \
   {                                   \
-    "esp1_buzzer"                      \
+    "esp1/buzzer"                      \
   }
 #define _MQTT_SUBSCRIBED_TOPICS_CALLBACKS \
   {                                       \
@@ -55,13 +55,13 @@ SOFTWARE.
 void
 esp1_buzzer_callback(byte* message, uint length);
 
-#define _MQTT_PUBLISH_TOPIC "esp1_pir_detection"
+#define _MQTT_PUBLISH_TOPIC "esp1/pir_detection"
 
 /**
  * @brief: Application IO parameters
  */
-#define _PIR_PIN 6
+#define _PIR_PIN 0
 
-#define _BUZZER_PIN 5
+#define _BUZZER_PIN 4
 #define _BUZZER_FREQUENCY_HZ 1000 
 #define _BUZZER_DURATION_MS 1000

@@ -1,5 +1,5 @@
 /**
- * 
+ *
 Copyright (c) 2021 M'barek ZACRI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,30 +33,31 @@ void
 setup()
 {
   Serial.begin(115200);
+  app_io::setup();
   wifi_client::setup();
   mqtt_client::setup();
-  app_io::setup();
 }
 
 void
 loop()
 {
-  if(not mqtt_client::isConnected())
+  if(!mqtt_client::isConnected())
   {
     mqtt_client::connect();
   }
 
-  if(not mqtt_client::loop())
+  if(!mqtt_client::loop())
   {
     mqtt_client::connect();
   }
-
-  if(app_io::pirDetect())
+  
+  String detection = "";
+  if(app_io::pirDetect(detection))
   {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "detected");
-  }
-  else
-  {
-    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, "not_detected");
+#ifdef _CONSOLE_DEBUG
+    Serial.print("Presence:");
+    Serial.println(detection);
+#endif
+    mqtt_client::publish(_MQTT_PUBLISH_TOPIC, detection.c_str());
   }
 }

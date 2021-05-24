@@ -1,5 +1,5 @@
 /**
- * 
+ *
 Copyright (c) 2021 M'barek ZACRI
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,8 +24,8 @@ SOFTWARE.
 
 #include "app_io.h"
 #include "app_config.h"
-#include <Arduino.h>
 
+bool detected = false;
 namespace app_io {
 void
 setup()
@@ -33,15 +33,30 @@ setup()
   pinMode(_BUZZER_PIN, OUTPUT);
   pinMode(_PIR_PIN, INPUT);
 #ifdef _CONSOLE_DEBUG
-  Serial.println("Calibrating PIR sensor, stay still for 15 min...");
+  Serial.println("Calibrating PIR sensor, stay still for 15 seconds...");
 #endif
   delay(15000);
 }
 
 bool
-pirDetect()
+pirDetect(String& detection)
 {
-  return digitalRead(_PIR_PIN);
+  bool edge = true;
+  if(digitalRead(_PIR_PIN) and not detected)
+  {
+    detected = true;
+    detection = "Detected";
+  }
+  else if(not digitalRead(_PIR_PIN) and detected)
+  {
+    detected = false;
+    detection = "Not detected";
+  }
+  else
+  {
+    edge = false;
+  }
+  return edge;
 }
 
 void

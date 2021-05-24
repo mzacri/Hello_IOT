@@ -24,6 +24,7 @@ SOFTWARE.
 
 #pragma once
 
+#include <Arduino.h>
 namespace app_io {
 /*
  * @brief: Setup application IO according to the app_config.h
@@ -35,7 +36,7 @@ setup();
  * @brief: Return PIR detection boolean
  */
 bool
-pirDetect();
+pirDetect(String& detection);
 
 /*
  * @brief: Return PIR detection boolean
