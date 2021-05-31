@@ -17,7 +17,9 @@ ESP8266, Raspberry PI, PIR sensor, PlatformIO (VSCode), C++, MQTT (Mosquitto), N
 ## Nominal scenario:
 
 1- ESP8266 detects movement via PIR sensor
+
 2- Node-RED application is notified via MQTT protocol
+
 3- App's user can toggle the buzzer
 
 # Work-packages
@@ -25,6 +27,7 @@ ESP8266, Raspberry PI, PIR sensor, PlatformIO (VSCode), C++, MQTT (Mosquitto), N
 ## ESP8266:
 
 ![79391a03655a0e6c08f0f1112de6eb82.png](./_resources/4ffc6de4d85e4f37a40544938d0fc0fd.png)
+
 The ESP8266 ship has a TCP/IP stack with WLAN 802.11b/g/n as physical and MAC layer. In the context of the project, the board is used to wirelessly provide the inputs state to other MQTT clients and set outputs state retrieved via MQTT.
 
 ### Hardware:
@@ -43,12 +46,19 @@ Code is written under an MIT license with re-usability and performance in mind. 
 *Source files structure:*
 
 |-include : application headers
+
 |---app_config.h : app configuration
+
 |---app_io.h : app inputs/outputs header
+
 |-src : application sources
+
 |---main.cpp : main thread
+
 |---app_config.cpp : configuration functions
+
 |---app_io.cpp : app inputs/outputs sources
+
 |-lib : private libraries
 
 1- *Public Libraries:*
